@@ -1,8 +1,10 @@
 import { useState } from "react";
-import '../../public/styles/formulario.css';
+import { useNavigate } from 'react-router-dom'; // Asegúrate de tener React Router instalado y configurado
+import '../../public/styles/formulario.css'
 
 function FormularioData() {
     const [colegio, setColegio] = useState('');
+    const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -12,7 +14,7 @@ function FormularioData() {
         console.log(data);
 
         try {
-            const response = await fetch("http://localhost:3001/estudiantes/guardar-datos", { // Ajusta la URL
+            const response = await fetch("http://localhost:3001/estudiantes/guardar-datos", { 
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,11 +25,11 @@ function FormularioData() {
             if (response.ok) {
                 const nuevoEstudiante = await response.json();
                 console.log('Estudiante guardado:', nuevoEstudiante);
-                // Puedes redirigir al usuario a otra página o mostrar un mensaje de éxito
+                // Redirigir al Formulario 2
+                navigate('/formularioPreguntas'); 
             } else {
                 const errorData = await response.json();
                 console.error('Error al guardar estudiante:', errorData.error);
-                // Muestra un mensaje de error al usuario
             }
         } catch (error) {
             console.error('Error de red:', error);
@@ -35,24 +37,24 @@ function FormularioData() {
         }
     }
 
-    return(
+    return (
         <div className="container-form-data">
-        <form onSubmit={handleSubmit} className="formulariodata">
-            <h1>Formulario 1</h1>
-            <label htmlFor="colegio"> 
-  Colegio:
-  <select value={colegio} id="colegio" onChange={(e) => setColegio(e.target.value)}>
-    <option value="">Selecciona...</option>
-    <option value="COMFANORTE">COMFANORTE</option>
-    <option value="JULIO PEREZ FERRERO">JULIO PEREZ FERRERO</option>
-    <option value="SANTA CECILIA">SANTA CECILIA</option>
-    <option value="SANTISIMA TRINIDAD">SANTISIMA TRINIDAD</option>
-    <option value="CLARETIANO">CLARETIANO</option>
-    <option value="JUAN ATALAYA">JUAN ATALAYA</option>
-    <option value="ORIENTAL 26">ORIENTAL 26</option>
-    <option value="Otro">Otro</option>
-  </select>
-</label>
+            <form onSubmit={handleSubmit} className="formulariodata">
+                <h1>Formulario 1</h1>
+                <label htmlFor="colegio"> 
+                    Colegio:
+                    <select value={colegio} id="colegio" onChange={(e) => setColegio(e.target.value)}>
+                        <option value="">Selecciona...</option>
+                        <option value="COMFANORTE">COMFANORTE</option>
+                        <option value="JULIO PEREZ FERRERO">JULIO PEREZ FERRERO</option>
+                        <option value="SANTA CECILIA">SANTA CECILIA</option>
+                        <option value="SANTISIMA TRINIDAD">SANTISIMA TRINIDAD</option>
+                        <option value="CLARETIANO">CLARETIANO</option>
+                        <option value="JUAN ATALAYA">JUAN ATALAYA</option>
+                        <option value="ORIENTAL 26">ORIENTAL 26</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </label>
 
             <label>
                 Nombre del estudiante:
@@ -74,10 +76,20 @@ function FormularioData() {
                 <input type="text" name="telefono" id="telefono" required />
             </label>
 
-            <button type="submit">Guardar</button>
-
-            <a href="/formularioPreguntas" style={{ marginTop: "1em", padding: "0.8em", background: "#c30000", textDecoration: "none", marginBottom: "2em",  border: "1px solid #e5e5e5", borderRadius:"8px", color: "white" }}>Continuar</a>
-        </form> 
+            <button 
+            type="submit" 
+            onClick={() => window.location.href='/formularioPreguntas'} 
+            style={{ 
+                marginTop: "1em", 
+                padding: "0.8em", 
+                background: "#c30000", 
+                textDecoration: "none", 
+                marginBottom: "2em",  
+                border: "1px solid #e5e5e5", 
+                borderRadius: "8px", 
+                color: "white" 
+            }}
+            >Continuar</button>        </form> 
         </div>
     )
 }

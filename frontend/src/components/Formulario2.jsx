@@ -8,7 +8,7 @@ function Formulario2() {
     pregunta4: '',
     pregunta5: '',
     pregunta6: '',
-    pregunta7: '', 
+    pregunta7: '',
     pregunta8: '',
     pregunta9: '',
   });
@@ -25,8 +25,15 @@ function Formulario2() {
     event.preventDefault();
     console.log('Respuestas del formulario:', respuestas);
 
+    // Obtener el ID del estudiante del localStorage
+    const idEstudiante = localStorage.getItem('idEstudiante');
+    console.log('ID recuperado de localStorage:', idEstudiante);
+
+    // Agregar el ID al objeto de respuestas
+    respuestas.estudianteId = idEstudiante;
+
     try {
-      const response = await fetch("http://localhost:3001/estudiantes/guardar-datos", { // O la ruta que uses en tu backend
+      const response = await fetch("http://localhost:3001/estudiantes/guardar-datos", { 
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -35,26 +42,23 @@ function Formulario2() {
       });
 
       if (response.ok) {
-        // const nuevoEstudiante = await response.json(); // Si el backend devuelve datos, puedes manejarlos aquí
         console.log('Datos guardados exitosamente');
-        // Puedes redirigir al usuario o mostrar un mensaje de éxito
         alert('¡Gracias por completar el formulario! Tus respuestas han sido enviadas.'); 
       } else {
         const errorData = await response.json();
         console.error('Error al guardar datos:', errorData.error);
-        // Muestra un mensaje de error al usuario
         alert('Hubo un error al enviar tus respuestas. Por favor, inténtalo de nuevo.'); 
       }
     } catch (error) {
       console.error('Error de red:', error);
-      // Muestra un mensaje de error al usuario
       alert('Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.'); 
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <h2>Sección 1: Intereses Personales</h2>
-      
+
       <label>
         1. ¿Qué te gusta hacer en tu tiempo libre?
         <select name="pregunta1" value={respuestas.pregunta1} onChange={handleChange}>
@@ -65,7 +69,6 @@ function Formulario2() {
           <option value="4">Leer sobre negocios y comercio internacional.</option>
           <option value="5">Administrar dinero y planificar presupuestos.</option>
           <option value="6">Organizar eventos y conocer nuevas culturas.</option>
-          
         </select>
       </label>
 
@@ -148,7 +151,7 @@ function Formulario2() {
       <h2>Sección 3: Preferencias de Estudio y Trabajo</h2>
       <label>
         7. ¿Cómo prefieres trabajar?
-        <select name="pregunta7" value={respuestas.pregunta4} onChange={handleChange}>
+        <select name="pregunta7" value={respuestas.pregunta7} onChange={handleChange}>
           <option value="">Selecciona una opción</option>
           <option value="1">De forma independiente, en proyectos de diseño gráfico.</option>
           <option value="2">En equipo, creando nuevas tendencias en moda..</option>
@@ -163,7 +166,7 @@ function Formulario2() {
 
       <label>
       8. ¿Te gustaría viajar o trabajar en el extranjero?
-        <select name="pregunta8" value={respuestas.pregunta5} onChange={handleChange}>
+        <select name="pregunta8" value={respuestas.pregunta8} onChange={handleChange}>
           <option value="">Selecciona una opción</option>
           <option value="1">No es mi prioridad, prefiero enfocarme en mi trabajo creativo.</option>
           <option value="2">Me gustaría, especialmente para explorar nuevas tendencias de moda.</option>
@@ -178,7 +181,7 @@ function Formulario2() {
       <label>
       9. ¿Te interesaría emprender tu propio negocio?
 
-        <select name="pregunta9" value={respuestas.pregunta6} onChange={handleChange}>
+        <select name="pregunta9" value={respuestas.pregunta9} onChange={handleChange}>
           <option value="">Selecciona una opción</option>
           <option value="1">Sí, un estudio de diseño gráfico.</option>
           <option value="2">Sí, una línea de moda propia.</option>

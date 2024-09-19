@@ -2,10 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Estudiante = sequelize.define('Estudiante', {
-  colegio: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -23,6 +20,10 @@ const Estudiante = sequelize.define('Estudiante', {
     },
   },
   telefono: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  colegio: {
     type: DataTypes.STRING,
     allowNull: false,
   },
