@@ -19,7 +19,7 @@
         cursor: pointer;
         transition: all .5s ease;
         color: white;
-        width: 100px;
+        width: 105px;
     } 
 
     & button:hover{
