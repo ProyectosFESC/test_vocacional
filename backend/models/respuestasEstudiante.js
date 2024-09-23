@@ -3,9 +3,40 @@ const sequelize = require('../config/database');
 const Estudiante = require('./estudiante'); // Importa el modelo Estudiante
 
 const RespuestaEstudiante = sequelize.define('RespuestaEstudiante', {
-
-  respuestas: {
-    type: DataTypes.JSON, 
+  pregunta1: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta2: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta3: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta4: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta5: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta6: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta7: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta8: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  pregunta9: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   carreraElegida: {
@@ -13,9 +44,5 @@ const RespuestaEstudiante = sequelize.define('RespuestaEstudiante', {
     allowNull: false,
   },
 });
-
-// Asociación con el modelo Estudiante (uno a uno)
-Estudiante.hasOne(RespuestaEstudiante);
-RespuestaEstudiante.belongsTo(Estudiante);
 
 module.exports = RespuestaEstudiante;

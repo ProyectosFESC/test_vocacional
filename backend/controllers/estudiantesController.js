@@ -63,11 +63,18 @@ exports.guardarDatos = async (req, res) => {
       // Obtener la carrera correspondiente a la respuesta más repetida
       const carreraElegida = carreraCorrespondiente(parseInt(respuestaMasRepetida));
 
-      // Guardar las respuestas en la nueva tabla, asociadas al estudiante
+      // Guardar las respuestas en la nueva tabla (sin asociar al estudiante)
       await RespuestaEstudiante.create({
-        respuestas: req.body, 
-        carreraElegida: carreraElegida, 
-        EstudianteId: estudiante.id, 
+        pregunta1, 
+        pregunta2, 
+        pregunta3,
+        pregunta4,
+        pregunta5,
+        pregunta6,
+        pregunta7,
+        pregunta8,
+        pregunta9,
+        carreraElegida: carreraElegida
       });
     }
 

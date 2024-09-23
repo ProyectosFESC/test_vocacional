@@ -27,7 +27,6 @@ function Formulario2() {
 
     // Obtener el ID del estudiante del localStorage
     const idEstudiante = localStorage.getItem('idEstudiante');
-    console.log('ID recuperado de localStorage:', idEstudiante);
 
     // Agregar el ID al objeto de respuestas
     respuestas.estudianteId = idEstudiante;
