@@ -89,7 +89,93 @@ exports.guardarDatos = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+exports.buscarPorNombre = async (req, res) => {
+  try {
+    const nombreBuscado = req.params.nombre;
 
+    // Buscar el estudiante por nombre en la tabla Estudiante
+    const estudiante = await Estudiante.findOne({ where: { nombre: nombreBuscado } });
+
+    if (!estudiante) {
+      return res.status(404).json({ error: 'Estudiante no encontrado' });
+    }
+
+    // Buscar la respuesta del estudiante en la tabla RespuestaEstudiante
+    const respuestaEstudiante = await RespuestaEstudiante.findOne({ where: { id: estudiante.id } });
+
+    if (!respuestaEstudiante) {
+      return res.status(404).json({ error: 'Respuestas del estudiante no encontradas' });
+    }
+
+    // Construir la respuesta con el nombre del estudiante y la carrera elegida
+    const resultado = {
+      nombre: estudiante.nombre,
+      carreraElegida: respuestaEstudiante.carreraElegida
+    };
+
+    res.json(resultado);
+  } catch (error) {
+    console.error('Error al buscar estudiante:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.obtenerEstadisticasCarreras = async (req, res) => {
+  try {
+    // 1. Consulta para contar estudiantes por carrera
+    const resultado_query = await RespuestaEstudiante.findAll({
+      attributes: ['carreraElegida', [Sequelize.fn('COUNT', Sequelize.col('carreraElegida')), 'conteo']],
+      group: ['carreraElegida']
+    });
+
+    // 2. Calcular el total de estudiantes
+    const total_estudiantes = resultado_query.reduce((total, resultado) => total + resultado.dataValues.conteo, 0);
+
+    // 3. Calcular porcentajes y construir la respuesta
+    const estadisticas = resultado_query.map(resultado => {
+      const porcentaje = (resultado.dataValues.conteo / total_estudiantes) * 100;
+      return {
+        carrera: resultado.carreraElegida,
+        conteo: resultado.dataValues.conteo,
+        porcentaje: porcentaje
+      };
+    });
+
+    // 4. Devolver los resultados al frontend
+    res.json(estadisticas);
+  } catch (error) {
+    // Manejo de errores
+    console.error('Error al obtener estadísticas de carreras:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.buscarPorColegio = async (req, res) => {
+  try {
+    const colegioBuscado = req.params.colegio;
+
+    // Buscar estudiantes por colegio, incluyendo sus respuestas (utilizando la asociación)
+    const estudiantes = await Estudiante.findAll({
+      where: { colegio: colegioBuscado },
+      include: RespuestaEstudiante // Incluir los datos de RespuestaEstudiante
+    });
+
+    if (estudiantes.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron estudiantes en ese colegio' });
+    }
+
+    // Construir la respuesta con el nombre del estudiante y la carrera elegida
+    const resultado = estudiantes.map(estudiante => ({
+      nombre: estudiante.nombre,
+      carreraElegida: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : null // Manejar el caso en que no haya respuesta aún
+    }));
+
+    res.json(resultado);
+  } catch (error) {
+    console.error('Error al buscar estudiantes por colegio:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
 // Función auxiliar para obtener la carrera correspondiente a cada valor de respuesta
 function carreraCorrespondiente(valor) {
   switch (valor) {
@@ -101,4 +187,5 @@ function carreraCorrespondiente(valor) {
     case 6: return 'turismo';
     default: return null; 
   }
+  
 }
