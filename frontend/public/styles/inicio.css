@@ -1,32 +1,32 @@
-
+/* Estilos principales */
 .inicio-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   height: 100vh; 
-  position: relative;
   overflow: hidden; 
+  margin: 0; 
+  padding: 0;
+  position: relative; 
 }
 
-
-.image-container {
-  width: 100%;
-  height: 100%;
-}
-
+/* Imagen de fondo */
 .background-img {
   width: 100%;
   height: 100vh; 
   object-fit: cover; 
+  margin: 0;
+  padding: 0;
 }
 
 
 .button-container {
   position: absolute;
-  top: 70%; 
-  right: 2%; /* Ajusta más hacia la derecha */
+  top: 60%; 
+  right: -13%; 
   transform: translateY(-50%);
+  z-index: 2; 
 }
 
 .start-button {
@@ -44,15 +44,17 @@
   background-color: #a10000;
 }
 
-/* Responsividad para pantallas pequeñas */
+/* RESPONSIVIDAD */
+
+/* Para pantallas pequeñas */
 @media (max-width: 768px) {
   .background-img {
-    height: auto; 
+    height: 100vh;
   }
 
   .button-container {
-    top: 75%; /* Ajuste del botón para pantallas pequeñas */
-    right: 5%; /* Más espacio en pantallas pequeñas */
+    top: 75%;
+    right: 5%;
   }
 
   .start-button {
@@ -61,14 +63,35 @@
   }
 }
 
-/* Ajuste para pantallas muy grandes */
+/* Para pantallas grandes */
 @media (min-width: 1200px) {
   .start-button {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
     padding: 1.2em 2.5em;
   }
-
-  .button-container {
-    right: -19%; 
-  }
 }
+
+
+/*Líneas decorativas en los costados */
+.inicio-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3); /* Línea decorativa oscura */
+  z-index: 1;
+}
+
+.inicio-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+

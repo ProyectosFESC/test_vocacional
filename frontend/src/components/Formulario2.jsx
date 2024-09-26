@@ -95,15 +95,16 @@ function Formulario2() {
         
         <div id="seccion1" className="section">
           <h2>Sección 1: Intereses Personales</h2>
+          
           <label>
-            1. ¿Qué te gusta hacer en tu tiempo libre?
+
             <select
               name="pregunta1"
               value={respuestas.pregunta1}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">1. ¿Qué te gusta hacer en tu tiempo libre?</option>
               <option value="1">Dibujar y crear diseños visuales.</option>
               <option value="2">Explorar estilos de moda y tendencias.</option>
               <option value="3">Resolver problemas con tecnología y software.</option>

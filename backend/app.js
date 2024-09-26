@@ -7,7 +7,7 @@ const RespuestaEstudiante = require('./models/respuestasEstudiante');
 const administradorRoutes = require('./routes/administrador');
 
 const app = express();
-const port = 3001;
+const port = 3006;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

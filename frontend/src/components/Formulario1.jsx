@@ -43,7 +43,6 @@ function FormularioData() {
         } catch (error) {
             console.error('Error de red:', error);
             // Muestra un mensaje de error al usuario
-            window.location.href = '/formularioPreguntas';
             alert('Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
         }
     }
@@ -51,12 +50,11 @@ function FormularioData() {
     return (
         <div className="container-form-data">
             <form onSubmit={handleSubmit} className="formulariodata">
-                <h1>Formulario 1</h1>
+                <h1>Registro de Estudiante</h1>
                 
                 <label>
-                    Colegio:
                     <select value={colegio} id="colegio" onChange={(e) => setColegio(e.target.value)}>
-                        <option value="">Selecciona...</option>
+                        <option value="">Selecciona tu colegio</option>
                         <option value="COMFANORTE">COMFANORTE</option>
                         <option value="JULIO PEREZ FERRERO">JULIO PEREZ FERRERO</option>
                         <option value="SANTA CECILIA">SANTA CECILIA</option>
@@ -72,11 +70,14 @@ function FormularioData() {
                     Nombre del estudiante:
                     <input type="text" name="nombre" id="nombre" required />
                 </label>
+                <label>
+                    Numero de Documento:
+                    <input type="text" name="documento." id="documento" required />
+                </label>
 
                 <label>
-                    Grado:
                     <select value={grado} id="grado" onChange={(e) => setGrado(e.target.value)}>
-                        <option value="">Selecciona...</option>
+                        <option value="">Selecciona tu</option>
                         <option value="9">9</option>
                         <option value="10">10</option>
                         <option value="11">11</option>
