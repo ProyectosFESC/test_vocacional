@@ -1,6 +1,38 @@
 const Estudiante = require('../models/estudiante');
 const RespuestaEstudiante = require('../models/respuestasEstudiante'); 
+const bcrypt = require('bcrypt'); // npm install bcrypt
+const jwt = require('jsonwebtoken'); // npm install jsonwebtoken
 
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validación básica (puedes agregar más validaciones)
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Faltan datos obligatorios' });
+    }
+
+    // Buscar al administrador por email
+    const administrador = await Administrador.findOne({ where: { email } });
+    if (!administrador) {
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    // Verificar la contraseña (usando bcrypt)
+    const passwordMatch = await bcrypt.compare(password, administrador.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    // Generar un token JWT (Json Web Token)
+    const token = jwt.sign({ id: administrador.id }, 'tu_secreto_jwt', { expiresIn: '1h' }); // Ajusta la duración del token según tus necesidades
+
+    res.json({ token });
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
 exports.guardarDatos = async (req, res) => {
   try {
     let estudiante;
@@ -89,90 +121,63 @@ exports.guardarDatos = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-exports.buscarPorNombre = async (req, res) => {
+exports.obtenerTodosLosEstudiantesConCarrera = async (req, res) => {
   try {
-    const nombreBuscado = req.params.nombre;
-
-    // Buscar el estudiante por nombre en la tabla Estudiante
-    const estudiante = await Estudiante.findOne({ where: { nombre: nombreBuscado } });
-
-    if (!estudiante) {
-      return res.status(404).json({ error: 'Estudiante no encontrado' });
-    }
-
-    // Buscar la respuesta del estudiante en la tabla RespuestaEstudiante
-    const respuestaEstudiante = await RespuestaEstudiante.findOne({ where: { id: estudiante.id } });
-
-    if (!respuestaEstudiante) {
-      return res.status(404).json({ error: 'Respuestas del estudiante no encontradas' });
-    }
-
-    // Construir la respuesta con el nombre del estudiante y la carrera elegida
-    const resultado = {
-      nombre: estudiante.nombre,
-      carreraElegida: respuestaEstudiante.carreraElegida
-    };
-
-    res.json(resultado);
-  } catch (error) {
-    console.error('Error al buscar estudiante:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
-exports.obtenerEstadisticasCarreras = async (req, res) => {
-  try {
-    // 1. Consulta para contar estudiantes por carrera
-    const resultado_query = await RespuestaEstudiante.findAll({
-      attributes: ['carreraElegida', [Sequelize.fn('COUNT', Sequelize.col('carreraElegida')), 'conteo']],
-      group: ['carreraElegida']
-    });
-
-    // 2. Calcular el total de estudiantes
-    const total_estudiantes = resultado_query.reduce((total, resultado) => total + resultado.dataValues.conteo, 0);
-
-    // 3. Calcular porcentajes y construir la respuesta
-    const estadisticas = resultado_query.map(resultado => {
-      const porcentaje = (resultado.dataValues.conteo / total_estudiantes) * 100;
-      return {
-        carrera: resultado.carreraElegida,
-        conteo: resultado.dataValues.conteo,
-        porcentaje: porcentaje
-      };
-    });
-
-    // 4. Devolver los resultados al frontend
-    res.json(estadisticas);
-  } catch (error) {
-    // Manejo de errores
-    console.error('Error al obtener estadísticas de carreras:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
-exports.buscarPorColegio = async (req, res) => {
-  try {
-    const colegioBuscado = req.params.colegio;
-
-    // Buscar estudiantes por colegio, incluyendo sus respuestas (utilizando la asociación)
     const estudiantes = await Estudiante.findAll({
-      where: { colegio: colegioBuscado },
-      include: RespuestaEstudiante // Incluir los datos de RespuestaEstudiante
+      include: { 
+        model: RespuestaEstudiante, 
+        attributes: ['carreraElegida'] 
+      }
     });
 
-    if (estudiantes.length === 0) {
-      return res.status(404).json({ error: 'No se encontraron estudiantes en ese colegio' });
-    }
-
-    // Construir la respuesta con el nombre del estudiante y la carrera elegida
+    // Formatear la respuesta para incluir solo nombre y carreraElegida
     const resultado = estudiantes.map(estudiante => ({
-      nombre: estudiante.nombre,
-      carreraElegida: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : null // Manejar el caso en que no haya respuesta aún
+      name: estudiante.nombre,
+      school: estudiante.colegio, // Incluir el colegio en la respuesta
+      profile: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : null 
     }));
 
     res.json(resultado);
   } catch (error) {
-    console.error('Error al buscar estudiantes por colegio:', error);
+    console.error('Error al obtener estudiantes:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+// Filtrar estudiantes por nombre, colegio y perfil
+exports.filtrarEstudiantes = async (req, res) => {
+  try {
+    const { searchTerm, schoolFilter, profileFilter } = req.query;
+
+    // Construir las condiciones de búsqueda
+    const whereClause = {};
+    if (searchTerm) {
+      whereClause.nombre = { [Op.like]: `%${searchTerm}%` }; // Búsqueda parcial por nombre
+    }
+    if (schoolFilter) {
+      whereClause.colegio = schoolFilter;
+    }
+
+    // Realizar la consulta, incluyendo las respuestas y aplicando los filtros
+    const estudiantes = await Estudiante.findAll({
+      where: whereClause,
+      include: { 
+        model: RespuestaEstudiante, 
+        attributes: ['carreraElegida'],
+        where: profileFilter ? { carreraElegida: profileFilter } : {} // Filtrar por perfil si se proporciona
+      }
+    });
+
+    // Formatear la respuesta
+    const resultado = estudiantes.map(estudiante => ({
+      name: estudiante.nombre,
+      school: estudiante.colegio,
+      profile: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : null
+    }));
+
+    res.json(resultado);
+  } catch (error) {
+    console.error('Error al filtrar estudiantes:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };

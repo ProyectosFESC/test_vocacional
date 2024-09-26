@@ -1,62 +1,113 @@
-.formulariodata{
+
+.container-form-data {
     display: flex;
-    flex-direction: column ;
-    align-items: center;
     justify-content: center;
-    max-width:  500px;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #faf5f5, #e2c3c3); 
+    padding: 20px;
+  }
+
+  .formulariodata {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
     width: 100%;
+  }
+  
+  h1 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+ 
+  label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #555;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #c30000;
+  }
+  
+ 
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #c30000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  .submit-button:hover {
+    background-color: #a10000;
+  }
 
-    border: 1px solid #e5e5e5;
-    padding: 1em;
-    margin-top: 2em;
-    border-radius:20px;
-    & button{
-        background-color: #c30000;
-        padding: 1em;
-        margin-top: 1em;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all .5s ease;
-        color: white;
-        width: 105px;
-    } 
-
-    & button:hover{
-        transform: scale(.95);
-    }
-    
-    & button:active{
-        transform: scale(1.05);
-    }
-
-    & label{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
 
 
-    & input{
-        padding: 0.5em;
-        transition: all .5s ease;
-    }
+  .admin-button {
+    display: flex;
+    justify-content: center;
 
-    & input:focus{
-        background-color: rgb(255, 204, 204);
-    }
+  }
 
-
-    & select{
-        padding: .5em;
-    }
+  .button-2 {
+    width: 100%;
+    padding: 10px;
+    background-color: #c30000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2   rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+.button-2:hover {
+  background-color: #a10000;
 }
 
-
-.container-form-data{
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-}
+  /* Diseño responsivo */
+  @media (max-width: 600px) {
+    .formulariodata {
+      padding: 20px;
+    }
+  
+    h1 {
+      font-size: 1.5rem;
+    }
+  
+    input, select {
+      font-size: 0.9rem;
+    }
+  
+    .submit-button {
+      font-size: 1rem;
+    }
+  }
+  

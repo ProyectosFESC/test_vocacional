@@ -1,0 +1,144 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #faf5f5, #e2c3c3); 
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: 1em;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  color: #f5f6fa;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.navbar nav {
+  display: flex;
+  border: none;
+  border-radius: 10px;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: #000000;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.menu-toggle:hover {
+  color: #c30000;
+}
+
+
+.formulario {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: #2f3640;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #c30000;
+  padding-bottom: 0.5rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+
+label {
+  display: block;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #dcdde1;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  background-color: #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+select:focus {
+  border-color: #c30000;
+  outline: none;
+  background-color: #ffffff;
+}
+
+select:hover {
+  background-color: #ffffff;
+}
+
+/* Submit Button */
+.botonEnviar {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+button[type="submit"] {
+  padding: 0.75rem 2rem;
+  background-color: #c30000;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #c30000;
+  transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+  background-color: #c30000;
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .formulario {
+    padding: 1.5rem;
+  }
+
+  select {
+    font-size: 0.9rem;
+  }
+
+  button[type="submit"] {
+    font-size: 0.9rem;
+  }
+}

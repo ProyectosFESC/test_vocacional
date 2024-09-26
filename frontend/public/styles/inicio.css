@@ -1,0 +1,74 @@
+
+.inicio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh; 
+  position: relative;
+  overflow: hidden; 
+}
+
+
+.image-container {
+  width: 100%;
+  height: 100%;
+}
+
+.background-img {
+  width: 100%;
+  height: 100vh; 
+  object-fit: cover; 
+}
+
+
+.button-container {
+  position: absolute;
+  top: 70%; 
+  right: 2%; /* Ajusta más hacia la derecha */
+  transform: translateY(-50%);
+}
+
+.start-button {
+  padding: 1em 2em;
+  background-color: #c30000;
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+  background-color: #a10000;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .background-img {
+    height: auto; 
+  }
+
+  .button-container {
+    top: 75%; /* Ajuste del botón para pantallas pequeñas */
+    right: 5%; /* Más espacio en pantallas pequeñas */
+  }
+
+  .start-button {
+    padding: 0.8em 1.5em;
+    font-size: 1rem;
+  }
+}
+
+/* Ajuste para pantallas muy grandes */
+@media (min-width: 1200px) {
+  .start-button {
+    font-size: 1.5rem; 
+    padding: 1.2em 2.5em;
+  }
+
+  .button-container {
+    right: -19%; 
+  }
+}
