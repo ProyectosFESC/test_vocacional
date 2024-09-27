@@ -52,7 +52,7 @@ function AdminDashboard() {
         profileFilter,
       }).toString();
 
-      const response = await fetch(`http://localhost:3001/estudiantes/filtrar?${queryParams}`);
+      const response = await fetch(`http://localhost:3006/estudiantes/filtrar?${queryParams}`);
       if (response.ok) {
         const data = await response.json();
         setStudents(data);
@@ -110,9 +110,11 @@ function AdminDashboard() {
           <div key={index} className="response-card">
             <p><strong>Nombre:</strong> {student.name}</p>
             <p><strong>Colegio:</strong> {student.school}</p>
-            <p><strong>Perfil:</strong> {student.profile || 'Sin perfil'}</p> 
-          </div>
+            <p><strong>Perfil:</strong> {student.profile || 'Sin perfil'}</p>             
+     
+          </div>        
         ))}
+
       </div>
     </div>
   );

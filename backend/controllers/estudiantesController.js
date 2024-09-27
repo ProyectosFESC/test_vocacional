@@ -69,7 +69,7 @@ exports.guardarDatos = async (req, res) => {
         pregunta7,
         pregunta8,
         pregunta9,
-        documento, // Asegúrate de que el frontend envíe el documento del estudiante
+ // Asegúrate de que el frontend envíe el documento del estudiante, aqui iba ""documento"
       } = req.body; 
       // Array con todas las respuestas
       const respuestasArray = [pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9];
@@ -111,8 +111,7 @@ exports.guardarDatos = async (req, res) => {
 
     res.status(500).json({ error: 'Error interno del servidor' });
   }
-};
-exports.obtenerTodosLosEstudiantesConCarrera = async (req, res) => {
+};exports.obtenerTodosLosEstudiantesConCarrera = async (req, res) => {
   try {
     const estudiantes = await Estudiante.findAll({
       include: { 
@@ -121,11 +120,12 @@ exports.obtenerTodosLosEstudiantesConCarrera = async (req, res) => {
       }
     });
 
-    // Formatear la respuesta para incluir solo nombre y carreraElegida
+    // Formatear la respuesta para incluir solo nombre, colegio, perfil y documento
     const resultado = estudiantes.map(estudiante => ({
       name: estudiante.nombre,
       school: estudiante.colegio, // Incluir el colegio en la respuesta
-      profile: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : null 
+      profile: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : 'Sin perfil', // Manejar el caso de perfil nulo
+      documento: estudiante.estudianteDocumento // Cambiar 'document' a 'documento' para que coincida con los datos reales
     }));
 
     res.json(resultado);
@@ -143,7 +143,7 @@ exports.filtrarEstudiantes = async (req, res) => {
     // Construir las condiciones de búsqueda
     const whereClause = {};
     if (searchTerm) {
-      whereClause.nombre = { [Op.like]: `%${searchTerm}%` }; // Búsqueda parcial por nombre
+      whereClause.documento = { [Op.like]: `%${searchTerm}%` }; // Búsqueda parcial por nombre
     }
     if (schoolFilter) {
       whereClause.colegio = schoolFilter;
