@@ -25,7 +25,7 @@ function AdminDashboard() {
     // Obtener todos los estudiantes al cargar el componente
     const fetchStudents = async () => {
       try {
-        const response = await fetch('http://localhost:3001/estudiantes'); 
+        const response = await fetch('http://localhost:3006/estudiantes'); 
         if (response.ok) {
           const data = await response.json();
           setStudents(data);

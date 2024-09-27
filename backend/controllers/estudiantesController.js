@@ -33,49 +33,44 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+const guardarDatosEstudiante = async (data) => {
+  const { colegio, nombre, grado, correo, telefono, documento } = data;
+
+  let estudiante = await Estudiante.findOne({ where: { documento } }); // Buscar por documento
+
+  if (!estudiante) {
+
+        // Si el estudiante no existe, crearlo
+        estudiante = await Estudiante.create({ colegio, nombre, grado, correo, telefono, documento });
+  } else {
+    // Si el estudiante existe, actualizar sus datos 
+    await estudiante.update({ colegio, nombre, grado, telefono });
+  }
+
+  return estudiante;
+};
+
 exports.guardarDatos = async (req, res) => {
   try {
-    let estudiante;
-
     // Manejar datos del primer formulario
-    if (req.body.colegio && req.body.nombre) { 
-      // Buscar si el estudiante ya existe por correo electrónico
-      estudiante = await Estudiante.findOne({ where: { correo: req.body.correo } });
-
-      if (estudiante) {
-        // Si el estudiante existe, actualizar sus datos 
-        await estudiante.update({ 
-          colegio: req.body.colegio, 
-          nombre: req.body.nombre, 
-          grado: req.body.grado, 
-          telefono: req.body.telefono 
-        });
-      } else {
-        // Si el estudiante no existe, crearlo
-        estudiante = await Estudiante.create({
-          colegio: req.body.colegio,
-          nombre: req.body.nombre,
-          grado: req.body.grado,
-          correo: req.body.correo,
-          telefono: req.body.telefono
-        });
-      }
-    }
-
+    if (req.body.colegio && req.body.nombre) {
+      const estudiante = await guardarDatosEstudiante(req.body);
+      res.json({ mensaje: 'Datos guardados exitosamente', estudianteId: estudiante.documento }); 
+    } 
     // Manejar datos del segundo formulario (preguntas)
-    if (req.body.pregunta1 && req.body.pregunta2) { 
-      const { 
-        pregunta1, 
-        pregunta2, 
+    else if (req.body.pregunta1 && req.body.pregunta2) {
+      const {
+        pregunta1,
+        pregunta2,
         pregunta3,
         pregunta4,
         pregunta5,
         pregunta6,
         pregunta7,
         pregunta8,
-        pregunta9
-      } = req.body;
-
+        pregunta9,
+        documento, // Asegúrate de que el frontend envíe el documento del estudiante
+      } = req.body; 
       // Array con todas las respuestas
       const respuestasArray = [pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9];
 
@@ -94,29 +89,25 @@ exports.guardarDatos = async (req, res) => {
 
       // Obtener la carrera correspondiente a la respuesta más repetida
       const carreraElegida = carreraCorrespondiente(parseInt(respuestaMasRepetida));
+      const estudianteDocumento = req.body.documento;
+      let estudiante = await Estudiante.findOne({ where: { documento: estudianteDocumento } });
 
-      // Guardar las respuestas en la nueva tabla (sin asociar al estudiante)
-      await RespuestaEstudiante.create({
-        pregunta1, 
-        pregunta2, 
-        pregunta3,
-        pregunta4,
-        pregunta5,
-        pregunta6,
-        pregunta7,
-        pregunta8,
-        pregunta9,
-        carreraElegida: carreraElegida
-      });
+      if (!estudiante) {
+        return res.status(400).json({ error: 'Estudiante no encontrado' });
+      }
+      await estudiante.update({ carreraElegida });   
+      res.json({ mensaje: 'Datos guardados exitosamente' }); 
+    } else {
+      // Si no se reconoce el tipo de formulario, devolver un error
+      return res.status(400).json({ error: 'Tipo de formulario no válido' });
     }
 
-    res.json({ mensaje: 'Datos guardados exitosamente' }); 
   } catch (error) {
     console.error('Error al guardar los datos:', error);
 
     if (error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ error: 'El correo electrónico ya está registrado' });
-    } 
+      return res.status(400).json({ error: 'El correo electrónico o el documento ya están registrados' });
+    }
 
     res.status(500).json({ error: 'Error interno del servidor' });
   }

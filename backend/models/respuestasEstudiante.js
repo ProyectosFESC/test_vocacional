@@ -1,48 +1,24 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Estudiante = require('./estudiante'); // Importa el modelo Estudiante
+const Estudiante = require('./estudiante'); 
 
 const RespuestaEstudiante = sequelize.define('RespuestaEstudiante', {
-  pregunta1: {
-    type: DataTypes.INTEGER,
+  estudianteDocumento: { // Clave foránea que referencia el documento del estudiante
+    type: DataTypes.STRING,
     allowNull: false,
-  },
-  pregunta2: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta3: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta4: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta5: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta6: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta7: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta8: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  pregunta9: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+    references: {
+      model: Estudiante, 
+      key: 'documento' 
+    }
   },
   carreraElegida: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
+
+// Asociación con el modelo Estudiante (uno a uno)
+Estudiante.hasOne(RespuestaEstudiante, { foreignKey: 'estudianteDocumento' }); 
+RespuestaEstudiante.belongsTo(Estudiante, { foreignKey: 'estudianteDocumento' });
 
 module.exports = RespuestaEstudiante;

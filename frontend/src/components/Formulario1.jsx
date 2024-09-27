@@ -1,52 +1,55 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import '../../public/styles/formulario.css';
 
-
 function FormularioData() {
-    const [colegio, setColegio] = useState('');
-    const [grado, setGrado] = useState('');
-    
+  const [colegio, setColegio] = useState('');
+  const [grado, setGrado] = useState('');
+  const [, setError] = useState(null); 
+  const navigate = useNavigate();
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target));
-        data.colegio = colegio;
-        data.grado = parseInt(grado); // Asegúrate de que 'grado' sea un número
-        console.log(data);
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-        try {
-            const response = await fetch("http://localhost:3001/estudiantes/guardar-datos", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const nuevoEstudiante = await response.json();
-                console.log('Estudiante guardado:', nuevoEstudiante);
-
-                // Almacenar el correo electrónico y el ID en localStorage
-                localStorage.setItem('correoEstudiante', nuevoEstudiante.correo);
-                localStorage.setItem('idEstudiante', nuevoEstudiante.id);
-
-                // Redirigir a la fromulario 2
-                window.location.href = '/formularioPreguntas';
-
-            } else {
-                const errorData = await response.json();
-                console.error('Error al guardar estudiante:', errorData.error);
-                // Muestra un mensaje de error al usuario (puedes usar un estado o una biblioteca para esto)
-                alert('Error al guardar los datos. Por favor, inténtalo de nuevo.');
-            }
-        } catch (error) {
-            console.error('Error de red:', error);
-            // Muestra un mensaje de error al usuario
-            alert('Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
-        }
+    // Validación básica en el frontend (puedes agregar más validaciones según tus necesidades)
+    if (!colegio || !grado) {
+      setError('Por favor, selecciona un colegio y un grado.');
+      return; 
     }
 
+    const data = Object.fromEntries(new FormData(e.target));
+    data.colegio = colegio;
+    data.grado = parseInt(grado, 10); 
+    console.log(data);
+
+    try {
+      const response = await fetch("http://localhost:3006/estudiantes/guardar-datos", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const nuevoEstudiante = await response.json();
+        console.log('Estudiante guardado:', nuevoEstudiante);
+      
+        // Almacenar el correo electrónico y el documento en localStorage
+        localStorage.setItem('correoEstudiante', nuevoEstudiante.correo);
+        localStorage.setItem('documentoEstudiante', nuevoEstudiante.documento);
+        // Redirigir al Formulario 2 usando useNavigate
+        navigate('/formularioPreguntas');
+      } else {
+        const errorData = await response.json();
+        console.error('Error al guardar estudiante:', errorData.error);
+        setError(errorData.error); // Mostrar el mensaje de error del backend
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+      setError('Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
+    }
+  }
     return (
         <div className="container-form-data">
             <form onSubmit={handleSubmit} className="formulariodata">
@@ -72,7 +75,7 @@ function FormularioData() {
                 </label>
                 <label>
                     Numero de Documento:
-                    <input type="text" name="documento." id="documento" required />
+                    <input type="text" name="documento" id="documento" required />
                 </label>
 
                 <label>

@@ -27,6 +27,8 @@ function Formulario2() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  console.log('Respuestas del formulario:', respuestas);
+    event.preventDefault();
     console.log('Respuestas del formulario:', respuestas);
 
     // Lógica para calcular la respuesta más seleccionada (igual que antes)
@@ -39,7 +41,7 @@ function Formulario2() {
     );
 
     try {
-      const response = await fetch("http://localhost:3001/estudiantes/guardar-datos", { 
+      const response = await fetch("http://localhost:3006/estudiantes/guardar-datos", { 
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +83,13 @@ function Formulario2() {
               className="img1"
             />
           </a>
+          <div className='idPrint'>
+      <label htmlFor="documento">Verificación de Documento:</label>
+      <input type="text" id="documento" name="documento" required size="10" 
+             value={respuestas.documento} onChange={handleChange} /> 
+    </div>
         </div>
+        
         <nav>
           <button className="menu-toggle" onClick={toggleMenu}>
             &#9776;

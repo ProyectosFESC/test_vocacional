@@ -2,7 +2,11 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Estudiante = sequelize.define('Estudiante', {
-
+  documento: { // Clave primaria
+    type: DataTypes.STRING,
+    allowNull: false, 
+    primaryKey: true,
+  },
   nombre: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -14,9 +18,9 @@ const Estudiante = sequelize.define('Estudiante', {
   correo: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true, // Asegurarse de que el correo sea único
+    unique: true, 
     validate: {
-      isEmail: true, // Validar que sea un correo electrónico válido
+      isEmail: true, 
     },
   },
   telefono: {
@@ -27,7 +31,6 @@ const Estudiante = sequelize.define('Estudiante', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  
 });
 
 module.exports = Estudiante;
