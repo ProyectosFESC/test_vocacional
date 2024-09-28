@@ -1,0 +1,31 @@
+# Ignorar node_modules
+node_modules
+**/node_modules
+
+# Ignorar el directorio de build (por si existe localmente)
+dist
+
+# Ignorar archivos de log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Ignorar archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar configuraciones de IDE
+.idea
+.vscode
+
+# Ignorar archivos de control de versiones
+.git
+.gitignore
+
+# Ignorar Dockerfile y docker-compose
+Dockerfile
+docker-compose.yml
+
+# Ignorar otros archivos innecesarios
+*.swp
+*.swo

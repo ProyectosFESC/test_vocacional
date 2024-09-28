@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: juansegaliz/testvocacionalbackend:latest
+    ports:
+      - "3006:3006"  # Ajusta el puerto si es necesario
+    environment:
+      NODE_ENV: production
+      # Agrega más variables de entorno según sea necesario
+    command: "node app.js"

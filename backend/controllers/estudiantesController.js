@@ -1,6 +1,6 @@
 const Estudiante = require('../models/estudiante');
 const RespuestaEstudiante = require('../models/respuestasEstudiante'); 
-const bcrypt = require('bcrypt'); // npm install bcrypt
+const bcrypt = require('bcryptjs'); // npm install bcrypt
 const jwt = require('jsonwebtoken'); // npm install jsonwebtoken
 
 exports.login = async (req, res) => {

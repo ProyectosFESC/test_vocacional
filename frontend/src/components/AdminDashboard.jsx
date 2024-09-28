@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import '../../public/styles/dashboard.css';
 
 function AdminDashboard() {
+  const apiUrl = import.meta.env.VITE_API_URL
   const [searchTerm, setSearchTerm] = useState('');
   const [schoolFilter, setSchoolFilter] = useState('');
   const [profileFilter, setProfileFilter] = useState('');
@@ -25,7 +26,7 @@ function AdminDashboard() {
     // Obtener todos los estudiantes al cargar el componente
     const fetchStudents = async () => {
       try {
-        const response = await fetch('http://localhost:3006/estudiantes'); 
+        const response = await fetch(`${apiUrl}/estudiantes`); 
         if (response.ok) {
           const data = await response.json();
           setStudents(data);
@@ -52,7 +53,7 @@ function AdminDashboard() {
         profileFilter,
       }).toString();
 
-      const response = await fetch(`http://localhost:3006/estudiantes/filtrar?${queryParams}`);
+      const response = await fetch(`${apiUrl}/estudiantes/filtrar?${queryParams}`);
       if (response.ok) {
         const data = await response.json();
         setStudents(data);

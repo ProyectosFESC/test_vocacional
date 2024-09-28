@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: juansegaliz/testvocacionalfrontend:latest
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_API_KEY=${VITE_API_KEY}
+    env_file:
+      - .env

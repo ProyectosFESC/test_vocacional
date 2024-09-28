@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import '../../public/styles/formulario.css';
 
-function FormularioData() {
+function FormularioData() {  
+  const apiUrl = import.meta.env.VITE_API_URL
   const [colegio, setColegio] = useState('');
   const [grado, setGrado] = useState('');
   const [, setError] = useState(null); 
@@ -23,7 +24,7 @@ function FormularioData() {
     console.log(data);
 
     try {
-      const response = await fetch("http://localhost:3006/estudiantes/guardar-datos", {
+      const response = await fetch(`${apiUrl}/estudiantes/guardar-datos`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

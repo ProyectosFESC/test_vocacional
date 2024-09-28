@@ -1,0 +1,2 @@
+docker-compose build
+docker push juansegaliz/testvocacionalbackend:latest

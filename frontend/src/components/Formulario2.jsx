@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para redirigir
 import '../../public/styles/formulario2.css';
 
-function Formulario2() {
+function Formulario2() {  
+  const apiUrl = import.meta.env.VITE_API_URL
+
   const [respuestas, setRespuestas] = useState({
     pregunta1: '',
     pregunta2: '',
@@ -27,7 +29,7 @@ function Formulario2() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  console.log('Respuestas del formulario:', respuestas);
+    console.log('Respuestas del formulario:', respuestas);
     event.preventDefault();
     console.log('Respuestas del formulario:', respuestas);
 
@@ -41,7 +43,7 @@ function Formulario2() {
     );
 
     try {
-      const response = await fetch("http://localhost:3006/estudiantes/guardar-datos", { 
+      const response = await fetch(`${apiUrl}/estudiantes/guardar-datos`, { 
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
