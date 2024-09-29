@@ -31,6 +31,9 @@ const Estudiante = sequelize.define('Estudiante', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+    carreraElegida: { 
+    type: DataTypes.STRING,
+ },
 });
 
 module.exports = Estudiante;

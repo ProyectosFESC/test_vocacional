@@ -1,7 +1,7 @@
 const Estudiante = require('../models/estudiante');
-const RespuestaEstudiante = require('../models/respuestasEstudiante'); 
 const bcrypt = require('bcrypt'); // npm install bcrypt
 const jwt = require('jsonwebtoken'); // npm install jsonwebtoken
+const { Op } = require('sequelize');
 
 exports.login = async (req, res) => {
   try {
@@ -41,7 +41,7 @@ const guardarDatosEstudiante = async (data) => {
   if (!estudiante) {
 
         // Si el estudiante no existe, crearlo
-        estudiante = await Estudiante.create({ colegio, nombre, grado, correo, telefono, documento });
+        estudiante = await Estudiante.create({ colegio, nombre, grado, correo, telefono, documento, carreraElegida });
   } else {
     // Si el estudiante existe, actualizar sus datos 
     await estudiante.update({ colegio, nombre, grado, telefono });
@@ -55,7 +55,7 @@ exports.guardarDatos = async (req, res) => {
     // Manejar datos del primer formulario
     if (req.body.colegio && req.body.nombre) {
       const estudiante = await guardarDatosEstudiante(req.body);
-      res.json({ mensaje: 'Datos guardados exitosamente', estudianteId: estudiante.documento }); 
+      res.json({ mensaje: 'Datos guardados exitosamente', estudianteId: estudiante.documento });
     } 
     // Manejar datos del segundo formulario (preguntas)
     else if (req.body.pregunta1 && req.body.pregunta2) {
@@ -69,8 +69,14 @@ exports.guardarDatos = async (req, res) => {
         pregunta7,
         pregunta8,
         pregunta9,
- // Asegúrate de que el frontend envíe el documento del estudiante, aqui iba ""documento"
-      } = req.body; 
+        documento // Asegúrate de que el frontend envía el documento del estudiante
+      } = req.body;
+
+      // Validar que se recibieron las respuestas y el documento del estudiante
+      if (!pregunta1 || !pregunta2 || !documento) { 
+        return res.status(400).json({ error: 'Faltan datos obligatorios' });
+      }
+
       // Array con todas las respuestas
       const respuestasArray = [pregunta1, pregunta2, pregunta3, pregunta4, pregunta5, pregunta6, pregunta7, pregunta8, pregunta9];
 
@@ -89,16 +95,20 @@ exports.guardarDatos = async (req, res) => {
 
       // Obtener la carrera correspondiente a la respuesta más repetida
       const carreraElegida = carreraCorrespondiente(parseInt(respuestaMasRepetida));
-      const estudianteDocumento = req.body.documento;
-      let estudiante = await Estudiante.findOne({ where: { documento: estudianteDocumento } });
+
+      // Buscar al estudiante por documento
+      let estudiante = await Estudiante.findOne({ where: { documento } });
 
       if (!estudiante) {
         return res.status(400).json({ error: 'Estudiante no encontrado' });
       }
-      await estudiante.update({ carreraElegida });   
-      res.json({ mensaje: 'Datos guardados exitosamente' }); 
+
+      // Actualizar la carrera elegida del estudiante
+      await estudiante.update({ carreraElegida });
+
+      res.json({ mensaje: 'Datos guardados exitosamente' });
+
     } else {
-      // Si no se reconoce el tipo de formulario, devolver un error
       return res.status(400).json({ error: 'Tipo de formulario no válido' });
     }
 
@@ -111,21 +121,18 @@ exports.guardarDatos = async (req, res) => {
 
     res.status(500).json({ error: 'Error interno del servidor' });
   }
-};exports.obtenerTodosLosEstudiantesConCarrera = async (req, res) => {
-  try {
-    const estudiantes = await Estudiante.findAll({
-      include: { 
-        model: RespuestaEstudiante, 
-        attributes: ['carreraElegida'] 
-      }
-    });
+};
 
-    // Formatear la respuesta para incluir solo nombre, colegio, perfil y documento
+exports.obtenerTodosLosEstudiantesConCarrera = async (req, res) => {
+  try {
+    const estudiantes = await Estudiante.findAll();
+
+    // Formatear la respuesta 
     const resultado = estudiantes.map(estudiante => ({
       name: estudiante.nombre,
-      school: estudiante.colegio, // Incluir el colegio en la respuesta
-      profile: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : 'Sin perfil', // Manejar el caso de perfil nulo
-      documento: estudiante.estudianteDocumento // Cambiar 'document' a 'documento' para que coincida con los datos reales
+      school: estudiante.colegio,
+      profile: estudiante.carreraElegida || 'Sin perfil', 
+      documento: estudiante.documento 
     }));
 
     res.json(resultado);
@@ -134,44 +141,41 @@ exports.guardarDatos = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
 // Filtrar estudiantes por nombre, colegio y perfil
-exports.filtrarEstudiantes = async (req, res) => {
-  try {
-    const { searchTerm, schoolFilter, profileFilter } = req.query;
+  exports.filtrarEstudiantes = async (req, res) => {
+    try {
+      const { searchTerm, schoolFilter, profileFilter } = req.query;
 
-    // Construir las condiciones de búsqueda
-    const whereClause = {};
-    if (searchTerm) {
-      whereClause.documento = { [Op.like]: `%${searchTerm}%` }; // Búsqueda parcial por nombre
-    }
-    if (schoolFilter) {
-      whereClause.colegio = schoolFilter;
-    }
-
-    // Realizar la consulta, incluyendo las respuestas y aplicando los filtros
-    const estudiantes = await Estudiante.findAll({
-      where: whereClause,
-      include: { 
-        model: RespuestaEstudiante, 
-        attributes: ['carreraElegida'],
-        where: profileFilter ? { carreraElegida: profileFilter } : {} // Filtrar por perfil si se proporciona
+      // Construir las condiciones de búsqueda
+      const whereClause = {};
+      if (searchTerm) {
+        whereClause.documento = { [Op.like]: `%${searchTerm}%` }; 
       }
-    });
+      if (schoolFilter) {
+        whereClause.colegio = schoolFilter;
+      }
+      if (profileFilter) {
+        whereClause.carreraElegida = profileFilter; 
+      }
 
-    // Formatear la respuesta
-    const resultado = estudiantes.map(estudiante => ({
-      name: estudiante.nombre,
-      school: estudiante.colegio,
-      profile: estudiante.RespuestaEstudiante ? estudiante.RespuestaEstudiante.carreraElegida : null
-    }));
+      // Realizar la consulta, incluyendo las respuestas y aplicando los filtros
+      const estudiantes = await Estudiante.findAll({
+        where: whereClause,
+      });
 
-    res.json(resultado);
-  } catch (error) {
-    console.error('Error al filtrar estudiantes:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
+      // Formatear la respuesta
+      const resultado = estudiantes.map(estudiante => ({
+        name: estudiante.nombre,
+        school: estudiante.colegio,
+        profile: estudiante.carreraElegida || null 
+      }));
+
+      res.json(resultado);
+    } catch (error) {
+      console.error('Error al filtrar estudiantes:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
 // Función auxiliar para obtener la carrera correspondiente a cada valor de respuesta
 function carreraCorrespondiente(valor) {
   switch (valor) {

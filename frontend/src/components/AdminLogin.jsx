@@ -3,22 +3,40 @@ import { useNavigate } from 'react-router-dom';
 import '../../public/styles/login.css';
 
 function AdminLogin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Crear el hook de navegación
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+   // Agregar estado para el mensaje de error
+    const navigate = useNavigate(); 
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+    try {
+      const response = await fetch('http://localhost:3006/estudiantes/login', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
-
-    
-    navigate('/admin-dashboard');
+      if (response.ok) {
+        // No se necesita manejar el token
+        navigate('/admin-dashboard'); // Redirigir al dashboard
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error); 
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+      setError('Error de conexión. Por favor, verifica tu conexión a internet.');
+    }
   };
-
   return (
     <div className="login-container">
       <h1>Iniciar Sesión</h1>
+      {error && <div className="error">{error}</div>} {/* Mostrar el mensaje de error */}
       <form onSubmit={handleSubmit} className="login-form">
         <div className="form-group">
           <label htmlFor="email">Correo Electrónico</label>
