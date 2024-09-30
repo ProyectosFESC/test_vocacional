@@ -81,7 +81,7 @@ function FormularioData() {
 
                 <label>
                     <select value={grado} id="grado" onChange={(e) => setGrado(e.target.value)}>
-                        <option value="">Selecciona tu</option>
+                        <option value="">Selecciona tu grado</option>
                         <option value="9">9</option>
                         <option value="10">10</option>
                         <option value="11">11</option>

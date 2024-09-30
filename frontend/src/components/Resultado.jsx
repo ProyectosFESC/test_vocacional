@@ -6,17 +6,17 @@ function Resultado() {
   const { respuestaMasSeleccionada } = location.state || {};
 
   const mensajes = {
-    1: 'Parece que te encanta el arte y el diseño gráfico.',
-    2: '¡La moda y el estilo son lo tuyo!',
-    3: 'La tecnología y la programación parecen ser tu área de interés.',
-    4: 'El comercio internacional y los negocios son lo tuyo.',
-    5: 'Te interesa la gestión financiera y la contabilidad.',
-    6: '¡Te apasiona el turismo y organizar eventos culturales!'
+    1: 'Produccion Grafica.',
+    2: 'Procesos de Diseño Grafico.',
+    3: 'Soporte Informatico.',
+    4: 'Procesos Aduaneros.',
+    5: 'Procesos Contables.',
+    6: 'Operaciones Turisticas'
   };
 
   return (
     <div className="resultado">
-      <h1>Resultado del Test:</h1>
+      <h1>De acuerdo a tus respuestas, el perfil profesional mas indicado es:</h1>
       {respuestaMasSeleccionada ? (
         <p>{mensajes[respuestaMasSeleccionada]}</p>
       ) : (
