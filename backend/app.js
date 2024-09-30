@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const sequelize = require('./config/database');
 const estudiantesRoutes = require('./routes/estudiantes');
 const cors = require('cors');
-const RespuestaEstudiante = require('./models/respuestasEstudiante');
 const administradorRoutes = require('./routes/administrador');
 
 const app = express();
@@ -15,7 +14,7 @@ app.use(cors());
 app.use('/estudiantes', estudiantesRoutes); 
 app.use('/administrador', administradorRoutes);
 
-
+//idk
 // Sincronizar el modelo con la base de datos (crear la tabla si no existe)
 sequelize.sync()
   .then(() => {

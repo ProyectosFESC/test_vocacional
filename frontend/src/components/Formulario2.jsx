@@ -64,12 +64,6 @@ function Formulario2() {
     }
   };
 
-
-  const toggleMenu = () => {
-    document.body.classList.toggle('open');
-  };
-
-
   return (
     <div className="formulario">
       
@@ -84,17 +78,11 @@ function Formulario2() {
             />
           </a>
           <div className='idPrint'>
-      <label htmlFor="documento">Verificación de Documento:</label>
+      <h2 htmlFor="documento">Verificación de Documento:</h2>
       <input type="text" id="documento" name="documento" required size="10" 
              value={respuestas.documento} onChange={handleChange} /> 
     </div>
         </div>
-        
-        <nav>
-          <button className="menu-toggle" onClick={toggleMenu}>
-            &#9776;
-          </button>
-        </nav>
       </header>
 
       <div className='formdiv'>
@@ -123,14 +111,13 @@ function Formulario2() {
           </label>
 
           <label>
-            2. ¿Qué tipo de actividades disfrutas más?
             <select
               name="pregunta2"
               value={respuestas.pregunta2}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">2. ¿Qué tipo de actividades disfrutas más?</option>
               <option value="1">Crear gráficos y editar fotos.</option>
               <option value="2">Diseñar ropa y accesorios.</option>
               <option value="3">Programar y desarrollar aplicaciones.</option>
@@ -141,14 +128,13 @@ function Formulario2() {
           </label>
 
           <label>
-            3. ¿Cuál de las siguientes materias te interesa más?
             <select
               name="pregunta3"
               value={respuestas.pregunta3}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">3. ¿Cuál de las siguientes materias te interesa más?</option>
               <option value="1">Arte y Diseño.</option>
               <option value="2">Textiles y Moda.</option>
               <option value="3">Tecnología e Informática.</option>
@@ -163,15 +149,13 @@ function Formulario2() {
         <div id="seccion2" className="section">
           <h2>Sección 2: Habilidades</h2>
           <label>
-            4. ¿Cómo te describirías en cuanto a creatividad?
-
             <select
               name="pregunta4"
               value={respuestas.pregunta4}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">4. ¿Cómo te describirías en cuanto a creatividad?</option>
               <option value="1">Muy creativo, siempre tengo nuevas ideas para diseños visuales.</option>
               <option value="2">Creativo en el diseño de ropa y moda.</option>
               <option value="3">Creativo en la resolución de problemas tecnológicos.</option>
@@ -182,14 +166,13 @@ function Formulario2() {
           </label>
 
           <label>            
-            5. ¿Qué tan cómodo te sientes trabajando con números y análisis?
             <select
               name="pregunta5"
               value={respuestas.pregunta5}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">5. ¿Qué tan cómodo te sientes trabajando con números y análisis?</option>
               <option value="1">No mucho, prefiero enfocarme en lo visual.</option>
               <option value="2">Solo cuando es necesario para mis diseños.</option>
               <option value="3">Me gusta cuando se trata de programación y análisis de datos. </option>
@@ -200,14 +183,13 @@ function Formulario2() {
           </label>
 
           <label>
-            6.  ¿Cómo te manejas en situaciones de presión?
             <select
               name="pregunta6"
               value={respuestas.pregunta6}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">6.  ¿Cómo te manejas en situaciones de presión?</option>
               <option value="1">Prefiero trabajar a mi propio ritmo.</option>
               <option value="2">Me manejo bien, especialmente si se trata de cumplir plazos creativos.</option>
               <option value="3">Me gusta resolver problemas bajo presión.</option>
@@ -222,14 +204,13 @@ function Formulario2() {
         <div id="seccion3" className="section">
           <h2>Sección 3: Preferencias de Estudio y Trabajo</h2>
           <label>
-            7. ¿Cómo prefieres trabajar?
             <select
               name="pregunta7"
               value={respuestas.pregunta7}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">7. ¿Cómo prefieres trabajar?</option>
               <option value="1">De forma independiente, en proyectos de diseño gráfico.</option>
               <option value="2">En equipo, creando nuevas tendencias en moda.</option>
               <option value="3">Tanto de forma independiente como en equipo, desarrollando software.</option>
@@ -244,14 +225,13 @@ function Formulario2() {
           </label>
 
           <label>
-            8. ¿Te gustaría viajar o trabajar en el extranjero?
             <select
               name="pregunta8"
               value={respuestas.pregunta8}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">8. ¿Te gustaría viajar o trabajar en el extranjero?</option>
               <option value="1">
                 No es mi prioridad, prefiero enfocarme en mi trabajo creativo.
               </option>
@@ -270,14 +250,13 @@ function Formulario2() {
           </label>
 
           <label>
-            9. ¿Te interesaría emprender tu propio negocio?
             <select
               name="pregunta9"
               value={respuestas.pregunta9}
               onChange={handleChange}
               required
             >
-              <option value="">Selecciona una opción</option>
+              <option value="">9. ¿Te interesaría emprender tu propio negocio?</option>
               <option value="1">Sí, un estudio de diseño gráfico.</option>
               <option value="2">Sí, una línea de moda propia.</option>
               <option value="3">Sí, una empresa de desarrollo de software.</option>
